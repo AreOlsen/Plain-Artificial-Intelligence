@@ -6,7 +6,9 @@ namespace NeuralNetwork
 		public static void Main(string[] args)
 		{
 			//INIT NETWORK.
-			Network? network = new Network(new int[] { 784, 100, 10 });
+			Network? network = new Network(
+				layerLengths: new int[] { 784, 100, 10 },
+                isRepeatableTraining: true);
 
 			//LOAD DATA FROM MNIST INTO ARRAYS.
 			double[][] trainInput;

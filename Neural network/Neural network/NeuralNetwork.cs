@@ -7,12 +7,14 @@ using System.Threading;
 namespace NeuralNetwork {
     [Serializable]
     public class Network {
-		public Layer[] layers;
+        public Layer[] layers;
+        public bool IsRepeatableTraining;
 
-		/*
+        /*
 			INIT NETWORK.
 		*/
-		public Network(int[] layerLengths){
+        public Network(int[] layerLengths, bool isRepeatableTraining)
+        {
 			//HEADER TEXT.
             Console.WriteLine($@"
 ______   ___   _____                            (
@@ -26,6 +28,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 -------------------------------------", Console.ForegroundColor = ConsoleColor.Magenta);
 
             this.layers = new Layer[layerLengths.Length];
+			this.IsRepeatableTraining = isRepeatableTraining;
 
 			Console.WriteLine("INITIALIZING NETWORK STRUCTURE.");
 			//INIT NODES.
@@ -39,6 +42,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			}
 
 			//INIT CONNECTIONS.
+			var weightInitializer = new WeightInitializer(isRepeatableTraining);
 			for(int i = layerLengths.Length-1; i >= 1 ; i--)
 			{
 				Layer layer = this.layers[i];
@@ -47,7 +51,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 				{
 					foreach (Node prevNode in prevLayer.nodes)
 					{
-						Connection con = new(prevNode, node, Connection.WeightInit(prevLayer.nodes.Length));
+						Connection con = new(prevNode, node, weightInitializer.GetWeight(prevLayer.nodes.Length));
 						node.inputConnections.Add(con);
 						prevNode.outputConnections.Add(con);
 					}
