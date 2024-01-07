@@ -128,7 +128,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
                 stopwatch.Start();
                 Console.WriteLine($"EPOCH_NUM : {epochI+1}");
 
-				for(int iterationI = 0; iterationI+batch < trainingDataInput.Length; iterationI+=batch)
+				for(int iterationI = 0; iterationI+batch <= trainingDataInput.Length; iterationI+=batch)
 				{
 					double[][] batchInput = new double[batch][];
 					double[][] batchOutput = new double[batch][];
