@@ -39,10 +39,17 @@
         {
             if (curLayer.outputLayer)
             {
-                gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer,GetNetActivationInput());
-            } else
+                gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
+            }
+            else
             {
-                gradient = outputConnections.Sum(con => con.nodeOut.gradient * con.weight) * Activations.RELU.Derivative(GetNetActivationInput());
+                gradient = 0.0;
+                for (int i = 0; i < outputConnections.Count; i++)
+                {
+                    var con = outputConnections[i];
+                    gradient += con.nodeOut.gradient * con.weight;
+                }
+                gradient *= Activations.RELU.Derivative(GetNetActivationInput());
             }
         }
 
@@ -52,8 +59,13 @@
         */
         public double GetNetActivationInput()
         {
-            double net = bias + inputConnections.Sum(con => con.weight*con.nodeIn.value);
-            return net;
+            double net = 0.0;
+            for (int i = 0; i < inputConnections.Count; i++)
+            {
+                var con = inputConnections[i];
+                net += con.weight * con.nodeIn.value;
+            }
+            return net + bias;
         }
     }
 }
