@@ -46,12 +46,21 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			for(int i = layerLengths.Length-1; i >= 1 ; i--)
 			{
 				Layer layer = this.layers[i];
-				Layer prevLayer = this.layers[i - 1];
-				foreach (Node node in layer.nodes)
+                Layer prevLayer = this.layers[i - 1];
+                var fanIn = prevLayer.nodes.Length;
+                var fanOut = i + 1 < layerLengths.Length ? layers[i + 1].nodes.Length : 0;
+
+                foreach (Node node in layer.nodes)
 				{
 					foreach (Node prevNode in prevLayer.nodes)
 					{
-						Connection con = new(prevNode, node, weightInitializer.GetWeight(prevLayer.nodes.Length));
+                        double weight;
+                        if (layer.outputLayer)
+                            weight = weightInitializer.GetWeight(fanIn, fanOut, isRelu: false, WeightInitializer.DistributionType.Normal);
+                        else
+                            weight = weightInitializer.GetWeight(fanIn, fanOut, isRelu: true, WeightInitializer.DistributionType.Uniform);
+
+                        Connection con = new(prevNode, node, weight);
 						node.inputConnections.Add(con);
 						prevNode.outputConnections.Add(con);
 					}
