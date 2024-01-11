@@ -132,14 +132,15 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			ApplyGradients(trainingStep/batchInput.Length, momentum, regularization);
 		}
 
-		public void Train(int epochs, int batch, double trainingStep, double momentum, double regularization, double[][] trainingDataInput, double[][] trainingDataOutput, double[][] testDataInput, double[][] testDataOutput)
+		public void Train(int epochs, int batch, double trainingStep, double momentum, double regularization, double[][] trainingDataInput, double[][] trainingDataOutput, double[][] testDataInput, double[][] testDataOutput, ref int epochNum)
 		{
-			Console.WriteLine("STARTING TRAINING.");
-			for (int epochI = 0; epochI < epochs; epochI++)
+            Console.WriteLine($"USING PARAMETERS (batchSize={batch} trainingStep={trainingStep} momentum={momentum} regularization={regularization}).");
+            
+			for (int epochI = 0; epochI < epochs; epochI++, epochNum++)
 			{
                 Stopwatch stopwatch = new();
                 stopwatch.Start();
-                Console.WriteLine($"EPOCH_NUM : {epochI+1}");
+                Console.WriteLine($"EPOCH_NUM : {epochNum + 1}");
 
 				DataSetLoader.Shuffle(trainingDataInput, trainingDataOutput);
 
@@ -160,10 +161,8 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 				TimeSpan ts = stopwatch.Elapsed;
 				Console.WriteLine($"EPOCH_TIME : {ts.Days}d, {ts.Hours}h, {ts.Minutes}m, {ts.Seconds}s");
 
-
-                 Test(testDataInput, testDataOutput);
+                Test(testDataInput, testDataOutput);
 			}
-			Console.WriteLine("TRAINING FINISHED.");
 		}
 
 
@@ -189,8 +188,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 
 			double percentageCorrect = (count * 100) / (testDataOutput.Length);
 			
-			Console.WriteLine($@"
-----------------------
+			Console.WriteLine($@"----------------------
 MSE_AVG   : {Cost.MSE.CostMultipleFunction(testDataOutput, calculated)}
 CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}", Console.ForegroundColor = ConsoleColor.Magenta);
 			Console.Write("CORRECT(%): ");

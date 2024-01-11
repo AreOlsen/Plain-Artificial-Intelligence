@@ -5,13 +5,13 @@ namespace NeuralNetwork
 	{
 		public static void Main(string[] args)
 		{
-			//INIT NETWORK.
-			Network? network = new Network(
-				layerLengths: new int[] { 784, 100, 10 },
+            //INIT NETWORK.
+            Network? network = new Network(
+                layerLengths: new int[] { 784, 100, 10 },
                 isRepeatableTraining: true);
 
-			//LOAD DATA FROM MNIST INTO ARRAYS.
-			double[][] trainInput;
+            //LOAD DATA FROM MNIST INTO ARRAYS.
+            double[][] trainInput;
 			double[][] trainOutput;
 
             double[][] testInput;
@@ -34,15 +34,26 @@ namespace NeuralNetwork
 				testOutput[i] = temp;
 			}
 
-			//TRAIN NETWORK.
-			network.Train(8, 32, 0.05d, 0.9d, 0.1d, trainInput, trainOutput, testInput, testOutput);
+            //TRAIN NETWORK.
+            Console.WriteLine("TRAINING STARTED."); 
+			
+            int epochNum = 0;
+            
+            network.Train(1,  15, 0.01, 0.95, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //96.35%
+            network.Train(1,  18, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.59%
+            network.Train(1,  24, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.68%
+            network.Train(1,  32, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.88%
+            network.Train(1, 64, 0.015, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.91%
+            network.Train(1, 128, 0.02, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.94%
+            network.Train(1, 256, 0.03, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //98.06%
+            network.Train(1, 512, 0.04, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
 
-			//SAVE NETWORK.
-			Serializer.SerializerBinary.SaveObjectToFile("../../../networkserialized", network);
+            //SAVE NETWORK.
+            Serializer.SerializerBinary.SaveObjectToFile("../../../networkserialized", network);
             //network = Serializer.SerializerBinary.LoadObjectFromFile<Network>("../../../networkserialized");
             //network.Test(testInput, testOutput);
             //network.Test(testInput, testOutput);
         }
-	}
+    }
 }
 
