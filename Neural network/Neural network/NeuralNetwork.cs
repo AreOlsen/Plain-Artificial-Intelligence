@@ -7,12 +7,14 @@ using System.Threading;
 namespace NeuralNetwork {
     [Serializable]
     public class Network {
-		public Layer[] layers;
+        public Layer[] layers;
+        public bool IsRepeatableTraining;
 
-		/*
+        /*
 			INIT NETWORK.
 		*/
-		public Network(int[] layerLengths){
+        public Network(int[] layerLengths, bool isRepeatableTraining)
+        {
 			//HEADER TEXT.
             Console.WriteLine($@"
 ______   ___   _____                            (
@@ -26,6 +28,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 -------------------------------------", Console.ForegroundColor = ConsoleColor.Magenta);
 
             this.layers = new Layer[layerLengths.Length];
+			this.IsRepeatableTraining = isRepeatableTraining;
 
 			Console.WriteLine("INITIALIZING NETWORK STRUCTURE.");
 			//INIT NODES.
@@ -39,15 +42,25 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			}
 
 			//INIT CONNECTIONS.
+			var weightInitializer = new WeightInitializer(isRepeatableTraining);
 			for(int i = layerLengths.Length-1; i >= 1 ; i--)
 			{
 				Layer layer = this.layers[i];
-				Layer prevLayer = this.layers[i - 1];
-				foreach (Node node in layer.nodes)
+                Layer prevLayer = this.layers[i - 1];
+                var fanIn = prevLayer.nodes.Length;
+                var fanOut = i + 1 < layerLengths.Length ? layers[i + 1].nodes.Length : 0;
+
+                foreach (Node node in layer.nodes)
 				{
 					foreach (Node prevNode in prevLayer.nodes)
 					{
-						Connection con = new(prevNode, node, Connection.WeightInit(prevLayer.nodes.Length));
+                        double weight;
+                        if (layer.outputLayer)
+                            weight = weightInitializer.GetWeight(fanIn, fanOut, isRelu: false, WeightInitializer.DistributionType.Normal);
+                        else
+                            weight = weightInitializer.GetWeight(fanIn, fanOut, isRelu: true, WeightInitializer.DistributionType.Uniform);
+
+                        Connection con = new(prevNode, node, weight);
 						node.inputConnections.Add(con);
 						prevNode.outputConnections.Add(con);
 					}
@@ -119,16 +132,19 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			ApplyGradients(trainingStep/batchInput.Length, momentum, regularization);
 		}
 
-		public void Train(int epochs, int batch, double trainingStep, double momentum, double regularization, double[][] trainingDataInput, double[][] trainingDataOutput, double[][] testDataInput, double[][] testDataOutput)
+		public void Train(int epochs, int batch, double trainingStep, double momentum, double regularization, double[][] trainingDataInput, double[][] trainingDataOutput, double[][] testDataInput, double[][] testDataOutput, ref int epochNum)
 		{
-			Console.WriteLine("STARTING TRAINING.");
-			for (int epochI = 0; epochI < epochs; epochI++)
+            Console.WriteLine($"USING PARAMETERS (batchSize={batch} trainingStep={trainingStep} momentum={momentum} regularization={regularization}).");
+            
+			for (int epochI = 0; epochI < epochs; epochI++, epochNum++)
 			{
                 Stopwatch stopwatch = new();
                 stopwatch.Start();
-                Console.WriteLine($"EPOCH_NUM : {epochI+1}");
+                Console.WriteLine($"EPOCH_NUM : {epochNum + 1}");
 
-				for(int iterationI = 0; iterationI+batch < trainingDataInput.Length; iterationI+=batch)
+				DataSetLoader.Shuffle(trainingDataInput, trainingDataOutput);
+
+                for(int iterationI = 0; iterationI+batch <= trainingDataInput.Length; iterationI+=batch)
 				{
 					double[][] batchInput = new double[batch][];
 					double[][] batchOutput = new double[batch][];
@@ -145,10 +161,8 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 				TimeSpan ts = stopwatch.Elapsed;
 				Console.WriteLine($"EPOCH_TIME : {ts.Days}d, {ts.Hours}h, {ts.Minutes}m, {ts.Seconds}s");
 
-
-                 Test(testDataInput, testDataOutput);
+                Test(testDataInput, testDataOutput);
 			}
-			Console.WriteLine("TRAINING FINISHED.");
 		}
 
 
@@ -174,8 +188,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 
 			double percentageCorrect = (count * 100) / (testDataOutput.Length);
 			
-			Console.WriteLine($@"
-----------------------
+			Console.WriteLine($@"----------------------
 MSE_AVG   : {Cost.MSE.CostMultipleFunction(testDataOutput, calculated)}
 CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}", Console.ForegroundColor = ConsoleColor.Magenta);
 			Console.Write("CORRECT(%): ");
