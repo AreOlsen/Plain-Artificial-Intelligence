@@ -132,7 +132,8 @@
                 }
 
                 double ex = Math.Exp(val);
-                return (ex * expsum - ex * ex) / (expsum * expsum);
+                double softmax = ex / expsum;
+                return softmax * (1 - softmax);
             }
         }
 
