@@ -15,18 +15,6 @@ namespace NeuralNetwork {
 		*/
         public Network(int[] layerLengths, bool isRepeatableTraining)
         {
-			//HEADER TEXT.
-            Console.WriteLine($@"
-______   ___   _____                            (
-| ___ \ / _ \ |_   _|                       (   )  )
-| |_/ // /_\ \  | |                          )  ( )
-|  __/ |  _  |  | |                          .....
-| |    | | | | _| |_                      .:::::::::.
-\_|    \_| |_/ \___/                      ~\_______/~  (Yummy Pie)
-
-PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
--------------------------------------", Console.ForegroundColor = ConsoleColor.Magenta);
-
             this.layers = new Layer[layerLengths.Length];
 			this.IsRepeatableTraining = isRepeatableTraining;
 
@@ -162,7 +150,7 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 				Console.WriteLine($"EPOCH_TIME : {ts.Days}d, {ts.Hours}h, {ts.Minutes}m, {ts.Seconds}s");
 
                 Test(testDataInput, testDataOutput);
-			}
+            }
 		}
 
 
@@ -187,13 +175,20 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			}
 
 			double percentageCorrect = (count * 100) / (testDataOutput.Length);
-			
-			Console.WriteLine($@"----------------------
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($@"----------------------
 MSE_AVG   : {Cost.MSE.CostMultipleFunction(testDataOutput, calculated)}
-CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}", Console.ForegroundColor = ConsoleColor.Magenta);
+CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}");
 			Console.Write("CORRECT(%): ");
-			Console.WriteLine($"{percentageCorrect}%", Console.ForegroundColor = (percentageCorrect<=60 ? ConsoleColor.Red: ((percentageCorrect<=90) ? ConsoleColor.Yellow  : ConsoleColor.Green)));
-			Console.WriteLine("----------------------", Console.ForegroundColor=ConsoleColor.Magenta);
-		}
-	}
+			Console.ForegroundColor =
+				percentageCorrect <= 60 ? ConsoleColor.Red :
+				percentageCorrect <= 90 ? ConsoleColor.Yellow :
+				ConsoleColor.Green;
+            Console.WriteLine($"{percentageCorrect}%");
+			Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("----------------------");
+            Console.WriteLine();
+        }
+    }
 }

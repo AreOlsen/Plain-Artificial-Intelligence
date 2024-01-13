@@ -5,6 +5,19 @@ namespace NeuralNetwork
 	{
 		public static void Main(string[] args)
 		{
+            //HEADER TEXT.
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($@"
+______   ___   _____                            (
+| ___ \ / _ \ |_   _|                       (   )  )
+| |_/ // /_\ \  | |                          )  ( )
+|  __/ |  _  |  | |                          .....
+| |    | | | | _| |_                      .:::::::::.
+\_|    \_| |_/ \___/                      ~\_______/~  (Yummy Pie)
+
+PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
+-------------------------------------");
+
             //INIT NETWORK.
             Network? network = new Network(
                 layerLengths: new int[] { 784, 100, 10 },
