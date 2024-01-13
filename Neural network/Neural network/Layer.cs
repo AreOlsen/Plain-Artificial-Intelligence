@@ -28,7 +28,7 @@ namespace NeuralNetwork
                     node.value = Activations.SoftMax.Activation(this,node.GetNetActivationInput());
                 } else
                 {
-                    node.value = Activations.RELU.Activation(node.GetNetActivationInput());
+                    node.value = Activations.LeakyRELU.Activation(node.GetNetActivationInput());
                 }
             }
         }

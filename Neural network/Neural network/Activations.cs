@@ -2,7 +2,7 @@
 {
 	public readonly struct Activations
 	{
-        public readonly struct SELU
+        public readonly struct SELU 
         {
             public static double Activation(double x)
             {
@@ -47,13 +47,14 @@
 
         public readonly struct LeakyRELU
         {
+            private const double alpha = 1d / 128d;
             public static double Activation(double x)
             {
                 if (x >= 0d)
                 {
                     return x;
                 }
-                return 0.01d * x;
+                return alpha * x;
             }
             public static double Derivative(double x)
             {
@@ -61,7 +62,7 @@
                 {
                     return 1d;
                 }
-                return 0.01d;
+                return alpha;
             }
         }
 

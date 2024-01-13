@@ -39,14 +39,14 @@ namespace NeuralNetwork
 			
             int epochNum = 0;
             
-            network.Train(1,  15, 0.01, 0.95, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //96.35%
-            network.Train(1,  18, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.59%
-            network.Train(1,  24, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.68%
-            network.Train(1,  32, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.88%
-            network.Train(1, 64, 0.015, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.91%
-            network.Train(1, 128, 0.02, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.94%
-            network.Train(1, 256, 0.03, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //98.06%
-            network.Train(1, 512, 0.04, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
+            network.Train(1,  15, 0.01, 0.95, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //95.75%
+            network.Train(1,  18, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.52%
+            network.Train(1,  24, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.51%
+            network.Train(1,  32, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.74%
+            network.Train(1, 64, 0.015, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
+            network.Train(1, 128, 0.02, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.93%
+            network.Train(1, 256, 0.03, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
+            network.Train(1, 512, 0.04, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //98.0%
 
             //SAVE NETWORK.
             Serializer.SerializerBinary.SaveObjectToFile("../../../networkserialized", network);

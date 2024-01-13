@@ -62,7 +62,7 @@
                     var con = outputConnections[i];
                     gradient += con.nodeOut.gradient * con.weight;
                 }
-                gradient *= Activations.RELU.Derivative(GetNetActivationInput());
+                gradient *= Activations.LeakyRELU.Derivative(GetNetActivationInput());
             }
         }
 
