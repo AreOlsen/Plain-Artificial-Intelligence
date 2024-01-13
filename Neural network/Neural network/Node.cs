@@ -39,7 +39,20 @@
         {
             if (curLayer.outputLayer)
             {
-                gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
+                //speed optimization:
+                //it's not necessary to calculate the formula when using
+                //the cross entropy cost function with softmax activation
+                //as it simlifies to "value - target"
+                if (false)
+                {
+#pragma warning disable CS0162 // Unreachable code detected
+                    gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
+#pragma warning restore CS0162 // Unreachable code detected
+                }
+                else
+                {
+                    gradient = value - target;
+                }
             }
             else
             {
