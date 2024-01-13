@@ -34,39 +34,36 @@
             biasDerivative += gradient;
         }
 
-        
-        public void UpdateGradient(Layer curLayer, double target = 0d)
+        public void UpdateGradient() //this is for a hidden layer
         {
-            if (curLayer.outputLayer)
+            gradient = 0d;
+            for (int i = 0; i < outputConnections.Count; i++)
             {
-                //speed optimization:
-                //it's not necessary to calculate the formula when using
-                //the cross entropy cost function with softmax activation
-                //as it simlifies to "value - target"
-                if (false)
-                {
-#pragma warning disable CS0162 // Unreachable code detected
-                    gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
-#pragma warning restore CS0162 // Unreachable code detected
-                }
-                else
-                {
-                    gradient = value - target;
-                }
+                var con = outputConnections[i];
+                gradient += con.nodeOut.gradient * con.weight;
             }
-            else
-            {
-                gradient = 0.0;
-                for (int i = 0; i < outputConnections.Count; i++)
-                {
-                    var con = outputConnections[i];
-                    gradient += con.nodeOut.gradient * con.weight;
-                }
-                gradient *= Activations.LeakyRELU.Derivative(GetNetActivationInput());
-            }
+            gradient *= Activations.LeakyRELU.Derivative(GetNetActivationInput());
             Utils.ThrowWhenBadValue(gradient);
         }
 
+        public void UpdateGradient(Layer curLayer, double target) // this is for the output layer
+        {
+            //speed optimization:
+            //it's not necessary to calculate the formula when using
+            //the cross entropy cost function with softmax activation
+            //as it simlifies to "value - target"
+            if (false)
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
+#pragma warning restore CS0162 // Unreachable code detected
+            }
+            else
+            {
+                gradient = value - target;
+            }
+            Utils.ThrowWhenBadValue(gradient);
+        }
 
         /*
             GET NODE DATA.

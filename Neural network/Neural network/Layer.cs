@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace NeuralNetwork
 {
@@ -39,7 +40,10 @@ namespace NeuralNetwork
             for (int j = 0; j < nodes.Length; j++)
             {
                 Node node = nodes[j];
-                node.UpdateGradient(this, (outputLayer) ? expected[j] : 0d);
+                if (outputLayer)
+                    node.UpdateGradient(this, expected[j]);
+                else
+                    node.UpdateGradient();
                 node.AddBiasDerivative();
                 foreach (Connection connection in node.inputConnections)
                 {
@@ -53,6 +57,7 @@ namespace NeuralNetwork
         */
         public void SetLayerValues(double[] values)
         {
+            Debug.Assert(inputLayer);
             for (int i = 0; i < values.Length; i++)
             {
                 nodes[i].value = values[i];
