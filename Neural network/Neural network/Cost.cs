@@ -1,4 +1,6 @@
-﻿namespace NeuralNetwork
+﻿using static NeuralNetwork.Utils;
+
+namespace NeuralNetwork
 {
 	public readonly struct Cost
 	{
@@ -61,24 +63,18 @@
 				return sum / target.Length;
             }
 
+            //binary cross entropy
             public static double CostFunctionIteration(double target, double calculated)
             {
-                double x = calculated;
-                double y = target;
-                double v = (y == 1) ? -Math.Log(x) : -Math.Log(1 - x);
-                return double.IsNaN(v) ? 0 : v;
+                calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
+                return (target == 1) ? -Math.Log(calculated) : -Math.Log(1 - calculated);
             }
 
+            //binary cross entropy
             public static double CostFunctionIterationDerivative(double target, double calculated)
             {
-                double x = calculated;
-                double y = target;
-                if (x == 0 || x == 1)
-                {
-                    return 0;
-                }
-				double val = (-x + y) / (x * (x - 1)); ;
-				return double.IsNaN(val) ? 0 : val;
+                calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
+				return (calculated - target) / (calculated * (1.0 - calculated));
             }
         }
     }
