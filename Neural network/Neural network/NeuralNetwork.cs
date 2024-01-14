@@ -60,19 +60,19 @@ namespace NeuralNetwork {
 		/*
 			FORWARDPROPAGATION
 		*/
-		public double[] CalculateOutputs(double[] inputValues){
+		public void CalculateOutputs(double[] inputValues)
+        {
 			layers[0].SetLayerValues(inputValues);
 			for(int i = 1; i < layers.Length; i++){
 				Layer layer = layers[i];
                 layer.UpdateValues();
 			}
-			return layers[^1].GetLayerValues();
 		}
 
-		/*
+        /*
 			BACKPROPAGATION
 		*/
-		private void UpdateGradients(double[] expected){
+        private void UpdateGradients(double[] expected){
             for (int i = layers.Length-1; i >= 1; i--){
 				Layer layer = layers[i];
 				layer.UpdateLayerGradients(expected);
@@ -113,7 +113,7 @@ namespace NeuralNetwork {
 			{
                 double[] sampleInput = batchInput[i];
                 double[] sampleOutput = batchOutput[i];
-                double[] calculates = CalculateOutputs(sampleInput);
+                CalculateOutputs(sampleInput);
                 UpdateGradients(sampleOutput);
             }
 
@@ -160,13 +160,14 @@ namespace NeuralNetwork {
 
 			double count = 0d;
 
-			for(int i = 0; i < calculated.Length; i++)
+            for(int i = 0; i < calculated.Length; i++)
 			{
-				double[] outputs = CalculateOutputs(testDataInput[i]);
-				calculated[i] = outputs;
+                CalculateOutputs(testDataInput[i]);
+				double[] outputs = layers[^1].GetLayerValues();
+                calculated[i] = outputs;
 
-				//Percentage correct.
-				int outputIndex = Array.IndexOf(outputs, outputs.Max());
+                //Percentage correct.
+                int outputIndex = Array.IndexOf(outputs, outputs.Max());
 				int correctindex = Array.IndexOf(testDataOutput[i], testDataOutput[i].Max());
 				if (outputIndex==correctindex)
 				{
