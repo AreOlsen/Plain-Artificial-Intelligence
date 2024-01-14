@@ -51,11 +51,14 @@
             //speed optimization:
             //it's not necessary to calculate the formula when using
             //the cross entropy cost function with softmax activation
-            //as it simlifies to "value - target"
+            //as it simplifies to "value - target"
             if (false)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                gradient = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value) * Activations.SoftMax.Derivative(curLayer, GetNetActivationInput());
+                double[] netInputs = curLayer.GetLayerNetInputs();
+                var costFunctioDerivative = Cost.CROSS_ENTROPY.CostFunctionIterationDerivative(target, value);
+                var activationFunctionDerivative = Activations.SoftMax.Derivative(netInputs, GetNetActivationInput());
+                gradient = costFunctioDerivative * activationFunctionDerivative;
 #pragma warning restore CS0162 // Unreachable code detected
             }
             else

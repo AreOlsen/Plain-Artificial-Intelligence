@@ -22,15 +22,30 @@ namespace NeuralNetwork
         */
         public void UpdateValues()
         {
-            foreach (Node node in nodes)
+            if (outputLayer)
+                UpdateValues_On_OutputLayer();
+            else
+                UpdateValues_On_HiddenLayer();
+        }
+
+        private void UpdateValues_On_HiddenLayer()
+        {
+            for (int i = 0; i < nodes.Length; i++)
             {
-                if (outputLayer)
-                {
-                    node.value = Activations.SoftMax.Activation(this,node.GetNetActivationInput());
-                } else
-                {
-                    node.value = Activations.LeakyRELU.Activation(node.GetNetActivationInput());
-                }
+                var node = nodes[i];
+                var netInput = node.GetNetActivationInput();
+                node.value = Activations.LeakyRELU.Activation(netInput);
+                Utils.ThrowWhenBadValue(node.value);
+            }
+        }
+
+        private void UpdateValues_On_OutputLayer()
+        {
+            double[] netInputs = this.GetLayerNetInputs();
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                var node = nodes[i];
+                node.value = Activations.SoftMax.Activation(netInputs, netInputs[i]);
                 Utils.ThrowWhenBadValue(node.value);
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace NeuralNetwork
+﻿using static NeuralNetwork.Utils;
+
+namespace NeuralNetwork
 {
 	public readonly struct Activations
 	{
@@ -111,29 +113,19 @@
 
         public readonly struct SoftMax
         {
-            public static double Activation(Layer layer, double value)
+            public static double Activation(double[] netInputs, double value)
             {
-                double[] x = layer.GetLayerNetInputs();
                 double expsum = 0d;
-                for (int i = 0; i < x.Length; i++)
+                for (int i = 0; i < netInputs.Length; i++)
                 {
-
-                    expsum += Math.Exp(x[i]);
+                    expsum += Math.Exp(netInputs[i]);
                 }
                 return Math.Exp(value) / expsum;
             }
 
-            public static double Derivative(Layer layer, double val)
+            public static double Derivative(double[] netInputs, double value)
             {
-                double[] x = layer.GetLayerNetInputs();
-                double expsum = 0d;
-                for (int i = 0; i < x.Length; i++)
-                {
-                    expsum += Math.Exp(x[i]);
-                }
-
-                double ex = Math.Exp(val);
-                double softmax = ex / expsum;
+                double softmax = Activation(netInputs, value);
                 return softmax * (1 - softmax);
             }
         }
