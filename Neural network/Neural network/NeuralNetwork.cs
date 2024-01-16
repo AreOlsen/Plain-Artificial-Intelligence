@@ -149,12 +149,13 @@ namespace NeuralNetwork {
 				TimeSpan ts = stopwatch.Elapsed;
 				Console.WriteLine($"EPOCH_TIME : {ts.Days}d, {ts.Hours}h, {ts.Minutes}m, {ts.Seconds}s");
 
-                Test(testDataInput, testDataOutput);
+                Test(trainingDataInput, trainingDataOutput, "Training");
+                Test(testDataInput, testDataOutput, "Testing");
             }
 		}
 
 
-        public void Test(double[][] testDataInput, double[][] testDataOutput)
+        public void Test(double[][] testDataInput, double[][] testDataOutput, string message)
 		{
 			double[][] calculated = new double[testDataInput.Length][];
 
@@ -178,7 +179,7 @@ namespace NeuralNetwork {
 			double percentageCorrect = (count * 100) / (testDataOutput.Length);
 
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($@"----------------------
+            Console.WriteLine($@"---------------------- {message}
 MSE_AVG   : {Cost.MSE.CostMultipleFunction(testDataOutput, calculated)}
 CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}");
 			Console.Write("CORRECT(%): ");
@@ -186,7 +187,7 @@ CROSS_AVG : {Cost.CROSS_ENTROPY.CostMultipleFunction(testDataOutput,calculated)}
 				percentageCorrect <= 60 ? ConsoleColor.Red :
 				percentageCorrect <= 90 ? ConsoleColor.Yellow :
 				ConsoleColor.Green;
-            Console.WriteLine($"{percentageCorrect}%");
+			Console.WriteLine($"{percentageCorrect}% ({count} / {testDataOutput.Length})");
 			Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("----------------------");
             Console.WriteLine();

@@ -66,15 +66,17 @@ namespace NeuralNetwork
             //binary cross entropy
             public static double CostFunctionIteration(double target, double calculated)
             {
-                calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
+				//disabled until it's proven it's needed
+                //calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
                 return (target == 1) ? -Math.Log(calculated) : -Math.Log(1 - calculated);
             }
 
             //binary cross entropy
             public static double CostFunctionIterationDerivative(double target, double calculated)
             {
-                calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
-				return (calculated - target) / (calculated * (1.0 - calculated));
+                //disabled until it's proven it's needed
+                //calculated = Math.Max(Epsilon, Math.Min(1 - Epsilon, calculated));
+                return (calculated - target) / (calculated * (1.0 - calculated));
             }
         }
     }

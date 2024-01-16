@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-namespace NeuralNetwork
+﻿namespace NeuralNetwork
 {
 	public class Program
 	{
@@ -32,11 +31,11 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
             DataSetLoader.LoadCsvToArray("../../../mnist_train.csv", 1, out trainOutput, out trainInput, 255d);
             DataSetLoader.LoadCsvToArray("../../../mnist_test.csv", 1, out testOutput, out testInput, 255d);
 
-			//FIX OUTPUT ARRAY, (DATASET DOESN'T USE ARRAY FOR OUTPUT, BUT 1 NUMBER :| ).
+            //FIX OUTPUT ARRAY, (DATASET DOESN'T USE ARRAY FOR OUTPUT, BUT 1 NUMBER :| ).
             for (int i = 0; i < trainOutput.Length; i++)
 			{
 				double[] temp = new double[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-				temp[Convert.ToInt32(trainOutput[i][0])] = 1d;
+				temp[Convert.ToInt32(trainOutput[i][0])] = 1;
 				trainOutput[i] = temp;
 			}
 
@@ -52,14 +51,10 @@ PLAIN-ARTIFICIAL-INTELLIGENCE. CREATED BY ARE OLSEN, 01.08.2023.
 			
             int epochNum = 0;
             
-            network.Train(1,  15, 0.01, 0.95, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //95.75%
-            network.Train(1,  18, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.52%
-            network.Train(1,  24, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.51%
-            network.Train(1,  32, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.74%
-            network.Train(1, 64, 0.015, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
-            network.Train(1, 128, 0.02, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.93%
-            network.Train(1, 256, 0.03, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //97.98%
-            network.Train(1, 512, 0.04, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum); //98.0%
+            network.Train(1,   15, 0.01, 0.95, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum);
+            network.Train(1,   18, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum);
+            network.Train(1,   24, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum);
+            network.Train(100, 32, 0.01, 0.90, 0, trainInput, trainOutput, testInput, testOutput, ref epochNum);
 
             //SAVE NETWORK.
             Serializer.SerializerBinary.SaveObjectToFile("../../../networkserialized", network);
