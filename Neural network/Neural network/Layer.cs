@@ -30,6 +30,7 @@ namespace NeuralNetwork
                 {
                     node.value = Activations.LeakyRELU.Activation(node.GetNetActivationInput());
                 }
+                Utils.ThrowWhenBadValue(node.value);
             }
         }
 

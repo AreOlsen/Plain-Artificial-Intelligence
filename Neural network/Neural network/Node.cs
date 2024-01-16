@@ -64,6 +64,7 @@
                 }
                 gradient *= Activations.LeakyRELU.Derivative(GetNetActivationInput());
             }
+            Utils.ThrowWhenBadValue(gradient);
         }
 
 
@@ -78,6 +79,7 @@
                 var con = inputConnections[i];
                 net += con.weight * con.nodeIn.value;
             }
+            Utils.ThrowWhenBadValue(net);
             return net + bias;
         }
     }

@@ -32,7 +32,8 @@
 			double velocity = weightVelocity * momentum - weightDerivative * trainingStep;
 			weightVelocity = velocity;
 			weight = weight * weightDecay + velocity;
-			weightDerivative = 0d;
+			Utils.ThrowWhenBadValue(weight);
+            weightDerivative = 0d;
 		}
 	}
 }
