@@ -115,12 +115,20 @@ namespace NeuralNetwork
         {
             public static double Activation(double[] netInputs, double value)
             {
+                // to make the Exp calculation safe (prevent overflow), we'll substract
+                // the max value from each item ("Safe SoftMax")
+                var maxVal = netInputs[0];
+                for (int i = 1; i < netInputs.Length; i++)
+                {
+                    if (netInputs[i] > maxVal)
+                        maxVal = netInputs[i];
+                }
                 double expsum = 0d;
                 for (int i = 0; i < netInputs.Length; i++)
                 {
-                    expsum += Math.Exp(netInputs[i]);
+                    expsum += Math.Exp(netInputs[i] - maxVal);
                 }
-                return Math.Exp(value) / expsum;
+                return Math.Exp(value - maxVal) / expsum;
             }
 
             public static double Derivative(double[] netInputs, double value)
